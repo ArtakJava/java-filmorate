@@ -1,18 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import ru.yandex.practicum.filmorate.errorMessage.ErrorMessage;
+import ru.yandex.practicum.filmorate.validator.Login.NotHaveSpace;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-public class User {
-    private int id;
-    @Email(message = "Некорректный email.")
+public class User extends Item {
+    @Email(message = ErrorMessage.USER_EMAIL)
     private String email;
-    @NotBlank(message = "Логин пользователя не может быть пустым.")
+    @NotBlank(message = ErrorMessage.USER_EMPTY_LOGIN)
+    @NotHaveSpace(message = ErrorMessage.USER_LOGIN_SPACE)
     private String login;
     private String name;
-    @PastOrPresent(message = "День рождения не может быть в будущем.")
+    @PastOrPresent(message = ErrorMessage.USER_BIRTHDAY)
     private LocalDate birthday;
 }

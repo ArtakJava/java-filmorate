@@ -2,19 +2,19 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.validator.ReleaseValidator;
+import ru.yandex.practicum.filmorate.errorMessage.ErrorMessage;
+import ru.yandex.practicum.filmorate.validator.ReleaseDate.ReleaseValidator;
 
 import java.time.LocalDate;
 
 @Data
-public class Film {
-    private int id;
-    @NotBlank(message = "Название фильма не может быть пустым.")
+public class Film extends Item {
+    @NotBlank(message = ErrorMessage.FILM_EMPTY_NAME)
     private String name;
-    @Size(max=200, message = "Количество символов в описании не может быть больше 200.")
+    @Size(max=200, message = ErrorMessage.FILM_MAX_DESCRIPTION)
     private String description;
-    @ReleaseValidator(message = "Дата основания кино 28 декабря 1895 года. Дата выхода фильма должно быть позже.")
+    @ReleaseValidator(message = ErrorMessage.FILM_RELEASE_DATE)
     private LocalDate releaseDate;
-    @Positive(message = "Продолжительность фильма не может быть отрицательным.")
+    @Positive(message = ErrorMessage.FILM_DURATION)
     private int duration;
 }
