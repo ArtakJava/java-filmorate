@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.errorMessage;
+package ru.yandex.practicum.filmorate.messageManager;
 
 public class ErrorMessage {
     public static final String FILM_EMPTY_NAME = "Название фильма не может быть пустым.";

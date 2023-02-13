@@ -3,12 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.errorMessage.ErrorMessage;
+import ru.yandex.practicum.filmorate.messageManager.ErrorMessage;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +14,10 @@ import java.util.Map;
 
 @Slf4j
 public abstract class Controller<T extends Item> {
-
     private final Map<Integer, T> storage = new HashMap<>();
     private int id;
 
-    @PostMapping
-    public T create(@Valid @RequestBody T body, BindingResult bindingResult) {
+    public T create(T body, BindingResult bindingResult) {
         if (isValid(bindingResult)) {
             body.setId(++id);
             storage.put(id, body);
@@ -29,8 +25,7 @@ public abstract class Controller<T extends Item> {
         return body;
     }
 
-    @PutMapping
-    public T update(@Valid @RequestBody T body, BindingResult bindingResult) {
+    public T update(T body, BindingResult bindingResult) {
         if (storage.containsKey(body.getId())) {
             if (isValid(bindingResult)) {
                 storage.put(id, body);
@@ -41,8 +36,7 @@ public abstract class Controller<T extends Item> {
         }
     }
 
-    @GetMapping
-    List<T> findAll() {
+    public List<T> findAll() {
         return new ArrayList<>(storage.values());
     }
 

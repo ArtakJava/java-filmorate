@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import ru.yandex.practicum.filmorate.errorMessage.ErrorMessage;
+import ru.yandex.practicum.filmorate.messageManager.ErrorMessage;
 import ru.yandex.practicum.filmorate.validator.Login.NotHaveSpace;
 
 import javax.validation.constraints.*;

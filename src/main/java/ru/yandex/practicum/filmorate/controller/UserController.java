@@ -1,25 +1,40 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController extends Controller<User> {
 
-    @Override
+    @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult bindingResult) {
+        log.info(InfoMessage.GET_CREATE_REQUEST + user);
         setName(user);
-        return super.create(user, bindingResult);
+        User result = super.create(user, bindingResult);
+        log.info(InfoMessage.SUCCESS_CREATE + result);
+        return result;
     }
 
-    @Override
+    @PutMapping
     public User update(@Valid @RequestBody User user, BindingResult bindingResult) {
+        log.info(InfoMessage.GET_UPDATE_REQUEST + user);
         setName(user);
-        return super.update(user, bindingResult);
+        User result = super.update(user, bindingResult);
+        log.info(InfoMessage.SUCCESS_UPDATE + result);
+        return result;
+    }
+
+    @GetMapping
+    public List<User> findAll() {
+        return super.findAll();
     }
 
     private void setName(User user) {
