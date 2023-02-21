@@ -10,5 +10,4 @@ public class ErrorMessage {
     public static final String USER_EMPTY_LOGIN = "Логин пользователя не может быть пустым.";
     public static final String USER_LOGIN_SPACE = "Логин пользователя не может содержать пробелы.";
     public static final String USER_BIRTHDAY = "День рождения не может быть в будущем.";
-    public static final String ITEM_NOT_EXIST = "Такого элемента нет.";
 }
