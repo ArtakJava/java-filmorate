@@ -22,5 +22,11 @@ public class Film extends DataStorage {
     @Positive(message = ErrorMessage.FILM_DURATION)
     private int duration;
     @JsonIgnore
-    private Set<Long> likes = new HashSet<>();
+    private Set<Long> likesStorage = new HashSet<>();
+    @JsonIgnore
+    private int likes;
+
+    public int getLikes() {
+        return likesStorage.size();
+    }
 }

@@ -1,93 +1,67 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.AbstractService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
-public class UserController extends Controller<User> {
-
-    public UserController(AbstractService<User> service) {
-        super(service);
-    }
+public class UserController {
+    private final UserService service;
 
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult bindingResult) {
         log.info(InfoMessage.GET_CREATE_REQUEST + user);
         setName(user);
-        User result = super.create(user, bindingResult);
-        log.info(InfoMessage.SUCCESS_CREATE + result);
-        return result;
+        return service.create(user, bindingResult);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user, BindingResult bindingResult) {
         log.info(InfoMessage.GET_UPDATE_REQUEST + user);
         setName(user);
-        User result = super.update(user, bindingResult);
-        log.info(InfoMessage.SUCCESS_UPDATE + result);
-        return result;
+        return service.update(user, bindingResult);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable long id, @PathVariable long friendId) {
-        log.info(InfoMessage.ADD_FRIEND_REQUEST + id + " и " + friendId);
+        log.info(InfoMessage.ADD_FRIEND_REQUEST, id, friendId);
         service.addFriend(id, friendId);
-        log.info(InfoMessage.SUCCESS_ADD_FRIEND + id + " и " + friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
-        log.info(InfoMessage.ADD_FRIEND_REQUEST + id + " и " + friendId);
+        log.info(InfoMessage.ADD_FRIEND_REQUEST, id, friendId);
         service.removeFriend(id, friendId);
-        log.info(InfoMessage.SUCCESS_ADD_FRIEND + id + " и " + friendId);
     }
 
     @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable long id) {
         log.info(InfoMessage.GET_FRIEND_LIST + id);
-        List<User> friends = service.getFriends(id);
-        log.info(InfoMessage.SUCCESS_FRIEND_LIST + id);
-        return friends;
+        return service.getFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
-        log.info(InfoMessage.GET_COMMON_FRIEND_LIST + id + " и " + otherId);
-        List<User> commonFriends = service.getCommonFriends(id, otherId);
-        log.info(InfoMessage.SUCCESS_COMMON_FRIEND_LIST + id + " и " + otherId);
-        return commonFriends;
-    }
-
-    @DeleteMapping({"/{id}", ""})
-    public void delete(@PathVariable(required = false) Long id) {
-        if (id != null) {
-            log.info(InfoMessage.DELETE_REQUEST + id);
-            super.delete(id);
-            log.info(InfoMessage.SUCCESS_DELETE + id);
-        } else {
-            log.info(InfoMessage.DATA_NOT_EXIST);
-            throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
-        }
+        log.info(InfoMessage.GET_COMMON_FRIEND_LIST, id, otherId);
+        return service.getCommonFriends(id, otherId);
     }
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        if (id != null) {
+        if (id != 0) {
             log.info(InfoMessage.GET_REQUEST + id);
-            User user = super.get(id);
-            log.info(InfoMessage.SUCCESS_GET + id);
-            return user;
+            return service.get(id);
         } else {
             log.info(InfoMessage.DATA_NOT_EXIST);
             throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
@@ -95,8 +69,9 @@ public class UserController extends Controller<User> {
     }
 
     @GetMapping
-    public List<User> findAll() {
-        return super.findAll();
+    public List<User> getAll() {
+        log.info(InfoMessage.GET_ALL_REQUEST);
+        return service.getAll();
     }
 
     private void setName(User user) {

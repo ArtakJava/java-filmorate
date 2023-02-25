@@ -24,8 +24,9 @@ public abstract class AbstractStorage<T extends DataStorage> implements Storage<
 
     @Override
     public T update(T data) {
-        if (storage.containsKey(data.getId())) {
-            storage.put(id, data);
+        T oldData = storage.get(data.getId());
+        if (oldData != null) {
+            storage.put(data.getId(), data);
             return data;
         } else {
             throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);

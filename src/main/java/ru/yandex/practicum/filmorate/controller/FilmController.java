@@ -1,81 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.AbstractService;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/films")
-public class FilmController extends Controller<Film> {
-
-    public FilmController(AbstractService<Film> service) {
-        super(service);
-    }
+public class FilmController {
+    private final FilmService service;
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film, BindingResult bindingResult) {
         log.info(InfoMessage.GET_CREATE_REQUEST + film);
-        Film result = super.create(film, bindingResult);
-        log.info(InfoMessage.SUCCESS_CREATE + result);
-        return result;
+        return service.create(film, bindingResult);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film, BindingResult bindingResult) {
         log.info(InfoMessage.GET_UPDATE_REQUEST + film);
-        Film result = super.update(film, bindingResult);
-        log.info(InfoMessage.SUCCESS_UPDATE + film);
-        return result;
-    }
-
-    @DeleteMapping({"/{id}", ""})
-    public void delete(@PathVariable(required = false) Long id) {
-        if (id != null) {
-            log.info(InfoMessage.DELETE_REQUEST + id);
-            super.delete(id);
-            log.info(InfoMessage.SUCCESS_DELETE + id);
-        } else {
-            log.info(InfoMessage.DATA_NOT_EXIST);
-        }
+        return service.update(film, bindingResult);
     }
 
     @PutMapping("{id}/like/{userId}")
     public void addLike(@PathVariable Long id, @PathVariable Long userId) {
-        log.info(InfoMessage.GET_ADD_LIKE_REQUEST + userId + " и " + id);
+        log.info(InfoMessage.GET_ADD_LIKE_REQUEST, userId, id);
         service.addLike(id, userId);
-        log.info(InfoMessage.SUCCESS_ADD_LIKE + userId + id);
     }
 
     @DeleteMapping("{id}/like/{userId}")
     public void removeLike(@PathVariable Long id, @PathVariable Long userId) {
-        log.info(InfoMessage.GET_REMOVE_LIKE_REQUEST + userId + " и "  + id);
+        log.info(InfoMessage.GET_REMOVE_LIKE_REQUEST, userId, id);
         service.removeLike(id, userId);
-        log.info(InfoMessage.SUCCESS_REMOVE_LIKE + userId + " и "  + id);
     }
 
     @GetMapping("/popular")
     public List<Film> getPopular(@RequestParam(defaultValue = "10") String count) {
         log.info(InfoMessage.GET_POPULAR_FILMS + count);
-        List<Film> films = service.getPopular(Integer.parseInt(count));
-        log.info(InfoMessage.SUCCESS_POPULAR_FILMS + count);
-        return films;
+        return service.getPopular(Integer.parseInt(count));
     }
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable(required = false) Long id) {
-        if (id != null) {
+        if (id != 0) {
             log.info(InfoMessage.GET_REQUEST + id);
-            Film film = super.get(id);
-            log.info(InfoMessage.SUCCESS_GET + id);
-            return film;
+            return service.get(id);
         } else {
             log.info(InfoMessage.DATA_NOT_EXIST);
             throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
@@ -83,7 +61,8 @@ public class FilmController extends Controller<Film> {
     }
 
     @GetMapping
-    public List<Film> findAll() {
-        return super.findAll();
+    public List<Film> getAll() {
+        log.info(InfoMessage.GET_ALL_REQUEST);
+        return service.getAll();
     }
 }
