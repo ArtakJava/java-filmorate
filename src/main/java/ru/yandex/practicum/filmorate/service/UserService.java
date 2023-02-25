@@ -50,7 +50,7 @@ public class UserService extends AbstractService<User> {
                 .filter(friend -> storage.get(otherUserId).getFriendsId().contains(friend))
                 .map(this::get)
                 .collect(Collectors.toList());
-        log.info(InfoMessage.SUCCESS_COMMON_FRIEND_LIST, userId, otherUserId);;
+        log.info(InfoMessage.SUCCESS_COMMON_FRIEND_LIST, userId, otherUserId);
         return commonFriends;
     }
 }
