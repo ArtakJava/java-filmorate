@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService extends AbstractService<Film> {
     private final Storage<User> userStorage;
+    private static final Comparator<Film> comparator = Comparator.comparingLong(Film::getLikes).reversed();
 
     public FilmService(Storage<Film> storage, Storage<User> userStorage) {
         super(storage);
@@ -35,7 +36,7 @@ public class FilmService extends AbstractService<Film> {
 
     public List<Film> getPopular(int count) {
         List<Film> popularFilms = storage.getAll().stream()
-                .sorted(Comparator.comparingLong(Film::getLikes).reversed())
+                .sorted(comparator)
                 .limit(count)
                 .collect(Collectors.toList());
         log.info(InfoMessage.SUCCESS_POPULAR_FILMS + count);

@@ -51,13 +51,8 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable(required = false) Long id) {
-        if (id != 0) {
-            log.info(InfoMessage.GET_REQUEST + id);
-            return service.get(id);
-        } else {
-            log.info(InfoMessage.DATA_NOT_EXIST);
-            throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
-        }
+        log.info(InfoMessage.GET_REQUEST + id);
+        return service.get(id);
     }
 
     @GetMapping

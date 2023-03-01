@@ -14,19 +14,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractService<T extends DataStorage> {
-    final Storage<T> storage;
+    protected final Storage<T> storage;
 
     public T create(T data, BindingResult bindingResult) {
-        isValid(bindingResult);
+        validate(data, bindingResult);
         log.info(InfoMessage.SUCCESS_CREATE + data);
         return storage.create(data);
     }
 
     public T update(T data, BindingResult bindingResult) {
-        if (isValid(bindingResult)) {
-            storage.update(data);
-            log.info(InfoMessage.SUCCESS_UPDATE + data);
-        }
+        validate(data, bindingResult);
+        log.info(InfoMessage.SUCCESS_UPDATE + data);
         return storage.update(data);
     }
 
@@ -42,7 +40,7 @@ public abstract class AbstractService<T extends DataStorage> {
         return allData;
     }
 
-    private boolean isValid(BindingResult bindingResult) {
+    protected void validate(T data, BindingResult bindingResult) {
         String message;
         if (bindingResult.hasErrors()) {
             StringBuilder bd = new StringBuilder();
@@ -52,8 +50,6 @@ public abstract class AbstractService<T extends DataStorage> {
             message = bd.toString();
             log.error(message);
             throw new ValidationException(message);
-        } else {
-            return true;
         }
     }
 }

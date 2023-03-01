@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Slf4j
@@ -22,14 +23,12 @@ public class UserController {
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult bindingResult) {
         log.info(InfoMessage.GET_CREATE_REQUEST + user);
-        setName(user);
         return service.create(user, bindingResult);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user, BindingResult bindingResult) {
         log.info(InfoMessage.GET_UPDATE_REQUEST + user);
-        setName(user);
         return service.update(user, bindingResult);
     }
 
@@ -72,11 +71,5 @@ public class UserController {
     public List<User> getAll() {
         log.info(InfoMessage.GET_ALL_REQUEST);
         return service.getAll();
-    }
-
-    private void setName(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
     }
 }
