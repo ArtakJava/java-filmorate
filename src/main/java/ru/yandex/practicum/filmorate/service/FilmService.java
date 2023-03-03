@@ -24,13 +24,13 @@ public class FilmService extends AbstractService<Film> {
 
     public void addLike(long filmId, long userId) {
         userStorage.get(userId);
-        storage.get(filmId).getLikesStorage().add(userId);
+        storage.get(filmId).addLike(userId);
         log.info(InfoMessage.SUCCESS_ADD_LIKE, userId, filmId);
     }
 
     public void removeLike(long filmId, long userId) {
         userStorage.get(userId);
-        storage.get(filmId).getLikesStorage().remove(userId);
+        storage.get(filmId).removeLike(userId);
         log.info(InfoMessage.SUCCESS_REMOVE_LIKE, userId, filmId);
     }
 

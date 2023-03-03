@@ -26,7 +26,13 @@ public class Film extends DataStorage {
     @JsonIgnore
     private int likes;
 
-    public int getLikes() {
-        return likesStorage.size();
+    public void addLike(Long id) {
+        likesStorage.add(id);
+        likes++;
+    }
+
+    public void removeLike(Long id) {
+        likesStorage.remove(id);
+        likes--;
     }
 }

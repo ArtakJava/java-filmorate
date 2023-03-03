@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,13 +38,14 @@ public class UserService extends AbstractService<User> {
         List<User> friends = storage.get(userId).getFriendsId().stream()
                 .map(this::get)
                 .collect(Collectors.toList());
-        log.info(InfoMessage.SUCCESS_FRIEND_LIST + userId);
+        log.info(InfoMessage.SUCCESS_FRIEND_LIST, userId);
         return friends;
     }
 
     public List<User> getCommonFriends(long userId, long otherUserId) {
+        Set<Long> friendsId = storage.get(otherUserId).getFriendsId();
         List<User> commonFriends = storage.get(userId).getFriendsId().stream()
-                .filter(friend -> storage.get(otherUserId).getFriendsId().contains(friend))
+                .filter(friendsId::contains)
                 .map(this::get)
                 .collect(Collectors.toList());
         log.info(InfoMessage.SUCCESS_COMMON_FRIEND_LIST, userId, otherUserId);

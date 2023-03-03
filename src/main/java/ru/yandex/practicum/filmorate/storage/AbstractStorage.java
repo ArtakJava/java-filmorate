@@ -29,7 +29,7 @@ public abstract class AbstractStorage<T extends DataStorage> implements Storage<
             storage.put(data.getId(), data);
             return data;
         } else {
-            throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
+            return dataNotFound();
         }
     }
 
@@ -43,12 +43,17 @@ public abstract class AbstractStorage<T extends DataStorage> implements Storage<
         if (storage.containsKey(id)) {
             return storage.get(id);
         } else {
-            throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
+            return dataNotFound();
         }
     }
 
     @Override
     public List<T> getAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    private T dataNotFound() {
+        log.info(InfoMessage.DATA_NOT_EXIST);
+        throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
     }
 }

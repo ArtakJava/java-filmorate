@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Slf4j
@@ -22,13 +20,13 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user, BindingResult bindingResult) {
-        log.info(InfoMessage.GET_CREATE_REQUEST + user);
+        log.info(InfoMessage.GET_CREATE_REQUEST, user);
         return service.create(user, bindingResult);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user, BindingResult bindingResult) {
-        log.info(InfoMessage.GET_UPDATE_REQUEST + user);
+        log.info(InfoMessage.GET_UPDATE_REQUEST, user);
         return service.update(user, bindingResult);
     }
 
@@ -46,7 +44,7 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable long id) {
-        log.info(InfoMessage.GET_FRIEND_LIST + id);
+        log.info(InfoMessage.GET_FRIEND_LIST, id);
         return service.getFriends(id);
     }
 
@@ -58,13 +56,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
-        if (id != 0) {
-            log.info(InfoMessage.GET_REQUEST + id);
-            return service.get(id);
-        } else {
-            log.info(InfoMessage.DATA_NOT_EXIST);
-            throw new NotFoundException(InfoMessage.DATA_NOT_EXIST);
-        }
+        log.info(InfoMessage.GET_REQUEST, id);
+        return service.get(id);
     }
 
     @GetMapping

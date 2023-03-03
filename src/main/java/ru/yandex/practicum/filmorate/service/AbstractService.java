@@ -18,19 +18,19 @@ public abstract class AbstractService<T extends DataStorage> {
 
     public T create(T data, BindingResult bindingResult) {
         validate(data, bindingResult);
-        log.info(InfoMessage.SUCCESS_CREATE + data);
+        log.info(InfoMessage.SUCCESS_CREATE, data);
         return storage.create(data);
     }
 
     public T update(T data, BindingResult bindingResult) {
         validate(data, bindingResult);
-        log.info(InfoMessage.SUCCESS_UPDATE + data);
+        log.info(InfoMessage.SUCCESS_UPDATE, data);
         return storage.update(data);
     }
 
     public T get(long id) {
         T data = storage.get(id);
-        log.info(InfoMessage.SUCCESS_GET + id);
+        log.info(InfoMessage.SUCCESS_GET, id);
         return data;
     }
 
