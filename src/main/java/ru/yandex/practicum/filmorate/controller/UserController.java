@@ -38,7 +38,7 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
-        log.info(InfoMessage.ADD_FRIEND_REQUEST, id, friendId);
+        log.info(InfoMessage.DELETE_FRIEND_REQUEST, id, friendId);
         service.removeFriend(id, friendId);
     }
 

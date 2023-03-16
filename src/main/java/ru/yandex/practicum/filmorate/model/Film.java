@@ -1,14 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.messageManager.ErrorMessage;
 import ru.yandex.practicum.filmorate.validator.ReleaseDate.ReleaseValidator;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -21,18 +20,42 @@ public class Film extends DataStorage {
     private LocalDate releaseDate;
     @Positive(message = ErrorMessage.FILM_DURATION)
     private int duration;
-    @JsonIgnore
-    private Set<Long> likesStorage = new HashSet<>();
-    @JsonIgnore
-    private int likes;
+    private Mpa mpa;
+    private Set<Genre> genres;
+    private Set<Like> likes;
 
-    public void addLike(Long id) {
-        likesStorage.add(id);
-        likes++;
+    public Film(Integer id,
+                String name,
+                String description,
+                LocalDate releaseDate,
+                int duration,
+                Mpa mpa,
+                Set<Genre> genres,
+                Set<Like> likes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+        this.genres = genres;
+        this.likes = likes;
     }
 
-    public void removeLike(Long id) {
-        likesStorage.remove(id);
-        likes--;
+    public Film(String name,
+                String description,
+                LocalDate releaseDate,
+                int duration,
+                Mpa mpa,
+                Set<Genre> genres) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+        this.genres = genres;
+    }
+
+    public Film() {
     }
 }

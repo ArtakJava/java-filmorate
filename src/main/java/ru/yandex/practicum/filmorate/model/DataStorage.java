@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public abstract class DataStorage {
-    private long id;
+    protected long id;
 }

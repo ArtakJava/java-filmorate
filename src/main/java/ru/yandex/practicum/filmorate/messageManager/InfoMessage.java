@@ -13,6 +13,9 @@ public class InfoMessage {
     public static final String ADD_FRIEND_REQUEST =
             "Запрос на добавление в друзья пользователей ID = {} и ID = {}.";
     public static final String SUCCESS_ADD_FRIEND = "Пользователи ID = {} и ID = {} добавили друг друга в друзья.";
+    public static final String DELETE_FRIEND_REQUEST =
+            "Запрос пользователя с ID = {} на удаление из друзей друга с ID = {}.";
+    public static final String SUCCESS_DELETE_FRIEND = "Пользователь с ID = {} удалил из друзей друга с ID = {}.";
     public static final String GET_FRIEND_LIST = "Запрос списка друзей пользователя с ID = {}.";
     public static final String SUCCESS_FRIEND_LIST = "Список друзей получен для пользователя с ID = {}.";
     public static final String GET_COMMON_FRIEND_LIST = "Запрос списка общих друзей пользователей ID = {} и ID = {}.";

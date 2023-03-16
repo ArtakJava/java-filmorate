@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public abstract class AbstractStorage<T extends DataStorage> implements Storage<T> {
+public abstract class AbstractCreatableStorage<T extends DataStorage> implements CreatableStorage<T> {
     private final Map<Long, T> storage = new HashMap<>();
     private long id;
 
@@ -31,11 +31,6 @@ public abstract class AbstractStorage<T extends DataStorage> implements Storage<
         } else {
             return dataNotFound();
         }
-    }
-
-    @Override
-    public void delete(Long id) {
-        storage.remove(id);
     }
 
     @Override

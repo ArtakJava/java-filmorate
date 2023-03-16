@@ -1,53 +1,43 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import ru.yandex.practicum.filmorate.dao.UserDbStorage;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class UserService extends AbstractService<User> {
-    public UserService(Storage<User> storage) {
-        super(storage);
+public class UserService extends AbstractCreatableService<User> {
+    protected final UserDbStorage userDbStorage;
+
+    public UserService(@Qualifier("UserDbStorage") UserDbStorage userDbStorage) {
+        super(userDbStorage);
+        this.userDbStorage = userDbStorage;
     }
 
     public void addFriend(long userId, long friendId) {
-        User user = storage.get(userId);
-        User friend = storage.get(friendId);
-        storage.get(userId).getFriendsId().add(friend.getId());
-        storage.get(friendId).getFriendsId().add(user.getId());
+        userDbStorage.addFriend(userId, friendId);
         log.info(InfoMessage.SUCCESS_ADD_FRIEND, userId, friendId);
     }
 
     public void removeFriend(long userId, long friendId) {
-        User user = storage.get(userId);
-        User friend = storage.get(friendId);
-        storage.get(userId).getFriendsId().remove(friend.getId());
-        storage.get(friendId).getFriendsId().remove(user.getId());
-        log.info(InfoMessage.SUCCESS_ADD_FRIEND, userId, friendId);
+        userDbStorage.removeFriend(userId, friendId);
+        log.info(InfoMessage.SUCCESS_DELETE_FRIEND, userId, friendId);
     }
 
     public List<User> getFriends(long userId) {
-        List<User> friends = storage.get(userId).getFriendsId().stream()
-                .map(this::get)
-                .collect(Collectors.toList());
+        List<User> friends = userDbStorage.getFriends(userId);
         log.info(InfoMessage.SUCCESS_FRIEND_LIST, userId);
         return friends;
     }
 
     public List<User> getCommonFriends(long userId, long otherUserId) {
-        Set<Long> friendsId = storage.get(otherUserId).getFriendsId();
-        List<User> commonFriends = storage.get(userId).getFriendsId().stream()
-                .filter(friendsId::contains)
-                .map(this::get)
-                .collect(Collectors.toList());
+        List<User> commonFriends = userDbStorage.getCommonFriends(userId, otherUserId);
         log.info(InfoMessage.SUCCESS_COMMON_FRIEND_LIST, userId, otherUserId);
         return commonFriends;
     }

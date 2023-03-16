@@ -1,14 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
 import ru.yandex.practicum.filmorate.messageManager.ErrorMessage;
 import ru.yandex.practicum.filmorate.validator.Login.NotHaveSpace;
 
 import javax.validation.constraints.*;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
 
 @Data
 public class User extends DataStorage {
@@ -19,7 +16,16 @@ public class User extends DataStorage {
     private String login;
     private String name;
     @PastOrPresent(message = ErrorMessage.USER_BIRTHDAY)
-    private LocalDate birthday;
-    @JsonIgnore
-    private Set<Long> friendsId = new HashSet<>();
+    private Date birthday;
+
+    public User(Integer id, String email, String login, String name, Date birthday) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public User() {
+    }
 }
