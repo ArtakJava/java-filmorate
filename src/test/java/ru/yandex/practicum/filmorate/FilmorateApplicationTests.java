@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.dao.*;
+import ru.yandex.practicum.filmorate.dao.FilmDbStorage;
+import ru.yandex.practicum.filmorate.dao.LikeDbStorage;
+import ru.yandex.practicum.filmorate.dao.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,10 +39,9 @@ class FilmorateApplicationTests {
 	@BeforeEach
 	public void beforeEach() {
 		film = new Film(
-				1,
 				"Первый фильм",
 				"Первый фильм для теста",
-				LocalDate.of(2010, 2, 2),
+				Date.valueOf("2010-2-2"),
 				60,
 				new Mpa(1, "G"),
 				Collections.emptySet(),
@@ -81,10 +81,9 @@ class FilmorateApplicationTests {
 	@Test
 	public void getAllFilms() {
 		Film otherFilm = new Film(
-				2,
 				"Еще один фильм",
 				"Еще один фильм для теста",
-				LocalDate.of(2021, 2, 2),
+				Date.valueOf("2021-2-2"),
 				60,
 				new Mpa(1, "G"),
 				Collections.emptySet(),
@@ -98,7 +97,8 @@ class FilmorateApplicationTests {
 
 	@Test
 	public void addLike() {
-		Like like = filmDbStorage.addLike(filmDbStorage.create(film).getId(), userDbStorage.create(user).getId());
+		Like like = new Like(1);
+		likeDbStorage.addLike(filmDbStorage.create(film).getId(), userDbStorage.create(user).getId());
 		assertEquals(like, likeDbStorage.get(1));
 	}
 
@@ -106,8 +106,8 @@ class FilmorateApplicationTests {
 	public void removeLike() {
 		long filmId = filmDbStorage.create(film).getId();
 		long userId = userDbStorage.create(user).getId();
-		filmDbStorage.addLike(filmId, userId);
-		boolean isRemoveLike = filmDbStorage.removeLike(filmId, userId);
+		likeDbStorage.addLike(filmId, userId);
+		boolean isRemoveLike = likeDbStorage.removeLike(filmId, userId);
 		assertTrue(isRemoveLike);
 	}
 
@@ -116,20 +116,18 @@ class FilmorateApplicationTests {
 		filmDbStorage.create(film);
 		filmDbStorage.create(
 				new Film(
-						2,
 						"Еще один фильм",
 						"Еще один фильм для теста",
-						LocalDate.of(1988, 3, 3),
+						Date.valueOf("1988-3-2"),
 						60,
 						new Mpa(1, "G"),
 						Collections.emptySet(),
 						Collections.emptySet()));
 		filmDbStorage.create(
 				new Film(
-						3,
 						"Третий фильм",
 						"Еще один фильм для теста",
-						LocalDate.of(2021, 2, 2),
+						Date.valueOf("2010-5-8"),
 						20,
 						new Mpa(1, "G"),
 						Collections.emptySet(),
@@ -146,9 +144,9 @@ class FilmorateApplicationTests {
 						new Date(1996, 2, 2)
 				)
 		);
-		filmDbStorage.addLike(1, 1);
-		filmDbStorage.addLike(2, 2);
-		filmDbStorage.addLike(1, 2);
+		likeDbStorage.addLike(1, 1);
+		likeDbStorage.addLike(2, 2);
+		likeDbStorage.addLike(1, 2);
 		List<Film> threePopularFilms = new ArrayList<>();
 		threePopularFilms.add(filmDbStorage.get(1));
 		threePopularFilms.add(filmDbStorage.get(2));

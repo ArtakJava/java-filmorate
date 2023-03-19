@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -9,11 +10,10 @@ import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component("GenreDbStorage")
 @Slf4j
@@ -49,9 +49,21 @@ public class GenreDbStorage implements GenreStorage {
     public void setFilmGenres(Set<Genre> genres, long filmId) {
         String sql = "insert into category(film_id, genre_id) values (?, ?)";
         if (genres != null) {
-            for (Genre genre : genres) {
-                jdbcTemplate.update(sql, filmId, genre.getId());
-            }
+            List<Genre> genreList = new ArrayList<>(genres);
+            jdbcTemplate.batchUpdate(
+                    sql,
+                    new BatchPreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement ps, int i) throws SQLException {
+                            ps.setLong(1, filmId);
+                            ps.setLong(2, genreList.get(i).getId());
+                        }
+
+                        @Override
+                        public int getBatchSize() {
+                            return genres.size();
+                        }
+                    } );
         }
     }
 

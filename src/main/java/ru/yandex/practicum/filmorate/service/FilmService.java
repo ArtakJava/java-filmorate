@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.FilmDbStorage;
+import ru.yandex.practicum.filmorate.dao.LikeDbStorage;
 import ru.yandex.practicum.filmorate.dao.UserDbStorage;
 import ru.yandex.practicum.filmorate.messageManager.InfoMessage;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,24 +15,27 @@ import java.util.List;
 @Service
 public class FilmService extends AbstractCreatableService<Film> {
     private final FilmDbStorage filmDbStorage;
+    private final LikeDbStorage likeDbStorage;
     private final UserDbStorage userDbStorage;
 
     public FilmService(@Qualifier("FilmDbStorage") FilmDbStorage filmDbStorage,
+                       @Qualifier("LikeDbStorage") LikeDbStorage likeDbStorage,
                        @Qualifier("UserDbStorage") UserDbStorage userDbStorage) {
         super(filmDbStorage);
         this.filmDbStorage = filmDbStorage;
+        this.likeDbStorage = likeDbStorage;
         this.userDbStorage = userDbStorage;
     }
 
     public void addLike(long filmId, long userId) {
         userDbStorage.get(userId);
-        filmDbStorage.addLike(filmId, userId);
+        likeDbStorage.addLike(filmId, userId);
         log.info(InfoMessage.SUCCESS_ADD_LIKE, userId, filmId);
     }
 
     public void removeLike(long filmId, long userId) {
         userDbStorage.get(userId);
-        filmDbStorage.removeLike(filmId, userId);
+        likeDbStorage.removeLike(filmId, userId);
         log.info(InfoMessage.SUCCESS_REMOVE_LIKE, userId, filmId);
     }
 

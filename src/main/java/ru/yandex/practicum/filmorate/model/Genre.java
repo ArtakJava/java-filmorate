@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Genre extends DataStorage {
     public String name;
 
-    public Genre(int id, String name) {
+    public Genre(long id, String name) {
         this.id = id;
         this.name = name;
     }

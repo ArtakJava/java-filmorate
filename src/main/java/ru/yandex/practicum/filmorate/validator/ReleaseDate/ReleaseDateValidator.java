@@ -2,17 +2,17 @@ package ru.yandex.practicum.filmorate.validator.ReleaseDate;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.time.LocalDate;
+import java.sql.Date;
 
-public class ReleaseDateValidator implements ConstraintValidator<ReleaseValidator, LocalDate> {
+public class ReleaseDateValidator implements ConstraintValidator<ReleaseValidator, Date> {
 
-    private static final LocalDate CINEMA_BIRTHDAY = LocalDate.of(1895, 12, 28);
+    private static final Date CINEMA_BIRTHDAY = Date.valueOf("1895-12-28");
 
     @Override
     public void initialize(ReleaseValidator validator) { }
 
     @Override
-    public boolean isValid(LocalDate releaseDate, ConstraintValidatorContext cxt) {
-        return releaseDate.isAfter(CINEMA_BIRTHDAY);
+    public boolean isValid(Date releaseDate, ConstraintValidatorContext cxt) {
+        return releaseDate.after(CINEMA_BIRTHDAY);
     }
 }

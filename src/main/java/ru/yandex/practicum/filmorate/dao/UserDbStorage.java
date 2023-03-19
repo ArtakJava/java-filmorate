@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component("UserDbStorage")
@@ -25,13 +24,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User create(User user) {
-        if (user.getId() > 0) {
-            String sql = "insert into users(user_id, email, login, name, birthday) values (?, ?, ?, ?, ?)";
-            jdbcTemplate.update(sql, user.getId(), user.getEmail(), user.getLogin(),user.getName(), user.getBirthday());
-        } else {
-            String sql = "insert into users(email, login, name, birthday) values (?, ?, ?, ?)";
-            jdbcTemplate.update(sql, user.getEmail(), user.getLogin(),user.getName(), user.getBirthday());
-        }
+        String sql = "insert into users(email, login, name, birthday) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getEmail(), user.getLogin(),user.getName(), user.getBirthday());
         String sqlSelect = "select * from users where email = ?";
         return jdbcTemplate.queryForObject(sqlSelect, this::mapRowToUser, user.getEmail());
     }

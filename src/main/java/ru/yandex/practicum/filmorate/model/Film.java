@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.validator.ReleaseDate.ReleaseValidator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.Set;
 
 @Data
@@ -17,17 +17,17 @@ public class Film extends DataStorage {
     @Size(max=200, message = ErrorMessage.FILM_MAX_DESCRIPTION)
     private String description;
     @ReleaseValidator(message = ErrorMessage.FILM_RELEASE_DATE)
-    private LocalDate releaseDate;
+    private Date releaseDate;
     @Positive(message = ErrorMessage.FILM_DURATION)
     private int duration;
     private Mpa mpa;
     private Set<Genre> genres;
     private Set<Like> likes;
 
-    public Film(Integer id,
+    public Film(long id,
                 String name,
                 String description,
-                LocalDate releaseDate,
+                Date releaseDate,
                 int duration,
                 Mpa mpa,
                 Set<Genre> genres,
@@ -44,16 +44,18 @@ public class Film extends DataStorage {
 
     public Film(String name,
                 String description,
-                LocalDate releaseDate,
+                Date releaseDate,
                 int duration,
                 Mpa mpa,
-                Set<Genre> genres) {
+                Set<Genre> genres,
+                Set<Like> likes) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
         this.genres = genres;
+        this.likes = likes;
     }
 
     public Film() {
